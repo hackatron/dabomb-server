@@ -22,7 +22,7 @@ class Match
   def pair
     r = redis
     begin
-      @pal = Player.new({:username => r.lpop})
+      @pal = Player.new({:username => r.lpop(self.class.waiting_key)})
     rescue
       wait
       return
@@ -57,9 +57,9 @@ class Match
       field_key = 'player'
     end
 
-    BombStore.hset(time_key, field_key, time)
+    redis.hset(time_key, field_key, time)
 
-    time = BombStore.hgetall
+    time = redis.hgetall
     if time.keys.size == 2
       find_winner(time)
     end
@@ -85,8 +85,8 @@ class Match
   end
 
   def destroy
-    BombStore.del(time_key)
-    BombStore.del(code)
+    redis.del(time_key)
+    redis.del(code)
   end
 
   def self.waiting_key
@@ -94,6 +94,6 @@ class Match
   end
 
   def self.waiting_list
-    BombStore.rlindex(waiting_key, 0, -1)
+    redis.lrange(waiting_key, 0, -1)
   end
 end
