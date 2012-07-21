@@ -9,3 +9,5 @@ $:.unshift(File.join(File.dirname(__FILE__), '/../'))
 
 require 'logger'
 require 'da_bomb'
+
+Dir["./models/**/*.rb"].each { |f| require f }

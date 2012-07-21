@@ -9,5 +9,9 @@ gem 'redis', '~> 2.2.0', :require => ['redis', 'redis/connection/hiredis']
 
 gem 'pusher'
 
-gem 'activesupport'
 gem 'hashie'
+
+group :development, :test do
+  gem 'rspec'
+  gem 'rack-test', :require => 'rack/test'
+end
