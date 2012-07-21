@@ -7,6 +7,11 @@ class DaBomb < Sinatra::Base
     content_type 'application/json'
   end
 
+  get '/' do
+    status 200
+    return "Hi... this is DaBomb server"
+  end
+
   post '/players' do
     player = Player.new(:username => Player.next)
     player.register
@@ -24,6 +29,7 @@ class DaBomb < Sinatra::Base
 
   post '/play/:username' do |username|
     player = Player.new({:username => username})
+    player.defer_retirement
 
     status 200
     return Yajl::Encoder.encode({:code => player.pair})
