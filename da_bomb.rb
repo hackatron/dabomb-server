@@ -1,7 +1,7 @@
 Encoding.default_external = Encoding::UTF_8
 
 class DaBomb < Sinatra::Base
-  VERSION = '0.0.7'
+  VERSION = '0.0.8'
 
   before do
     content_type 'application/json'
@@ -9,7 +9,7 @@ class DaBomb < Sinatra::Base
 
   get '/' do
     status 200
-    return "Hi... this is DaBomb server"
+    return "Hi... this is DaBomb server v. #{VERSION}"
   end
 
   post '/players' do
@@ -29,7 +29,6 @@ class DaBomb < Sinatra::Base
 
   post '/play/:username' do |username|
     player = Player.new({:username => username})
-    player.defer_retirement
 
     status 200
     return Yajl::Encoder.encode({:code => player.pair})
