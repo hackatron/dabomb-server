@@ -29,6 +29,7 @@ class Match
     end
 
     r.set(code, "#{@player.username}:#{@pal.username}")
+    r.set("#{@pal.username}:match", code)
   end
 
   def code
@@ -64,6 +65,11 @@ class Match
     end
   end
 
+  def cancel
+    @player.notify_cancel
+    destroy
+  end
+
   def find_winner(time)
     winner = time[@player.username].to_i > time[@pal.username].to_i ? @player : @pal
     if time[winner.username].to_i == -1
@@ -75,6 +81,10 @@ class Match
     # TODO: give points
 
     # the match is over, remove match keys
+    destroy
+  end
+
+  def destroy
     BombStore.del(time_key)
     BombStore.del(code)
   end

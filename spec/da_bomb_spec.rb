@@ -12,7 +12,7 @@ describe DaBomb do
 
   describe 'POST /players/:username/retire' do
     it 'remove respond success and remove player from match' do
-      Player.any_instance.should_receive(:retire).with('username')
+      Player.any_instance.should_receive(:retire)
 
       post '/players/username/retire'
 

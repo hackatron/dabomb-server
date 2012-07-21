@@ -3,12 +3,19 @@ class DaBomb < Sinatra::Base
     content_type 'application/json'
   end
 
-  post '/player' do
-    player = Player.new({:username => Player.next})
+  post '/players' do
+    player = Player.new(:username => Player.next)
     player.register
 
     status 201
     return Yajl::Encoder.encode({:username => player.username})
+  end
+
+  post '/players/:username/retire' do |username|
+    player = Player.new(:username => username)
+    player.retire
+
+    status 204
   end
 
   post '/play/:username' do |username|

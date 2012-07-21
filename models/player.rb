@@ -29,6 +29,14 @@ class Player < Hashie::Dash
     end
   end
 
+  def retire
+    if current_match
+      current_match.cancel
+    end
+
+    redis.lrem(Match.waiting_key, username, 1)
+  end
+
   def pair
     match = Match.new(self)
     if match.pal
@@ -40,6 +48,18 @@ class Player < Hashie::Dash
   end
 
   def wake_up(code)
-    # TODO
+    Pusher["dabomb-#{username}"].trigger('wake-up', {:code => code})
+  end
+
+  def current_match
+    Match.from_code(redis.get("#{username}:match"))
+  end
+
+  def close_match(match, winner)
+    Pusher["dabomb-#{username}"].trigger('close-match', {:winner => winner})
+  end
+
+  def notify_cancel
+    Pusher["dabomb-#{username}"].trigger('match-cancel', {:boom => 'match cancel'})
   end
 end
