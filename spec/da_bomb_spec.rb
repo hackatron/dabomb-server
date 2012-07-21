@@ -34,26 +34,30 @@ describe DaBomb do
     end
   end
 
-  describe '/score/:username' do
+  describe '/defuse/:code' do
     context 'with valid params' do
-      it 'respond success' do
-        post '/score/username', {:code => 'code', :score => 1.0}
+      before { @match = match = Object.new }
 
-        last_response.should be_success
+      it 'respond success' do
+        Match.stub(:from_code).and_return(@match)
+        @match.stub(:defuse)
+
+        post '/defuse/match_code', {:username => 'username', :time => '1.0'}
+
+        last_response.status.should == 204
       end
 
-      it 'set player score for match' do
-        match = Object.new
-        Match.should_receive(:from_code).with(@code).and_return(match)
-        match.should_receive(:score).with('username', '1.0')
+      it 'set player time for match' do
+        Match.should_receive(:from_code).with('match_code').and_return(@match)
+        @match.should_receive(:defuse).with('username', '1.0')
 
-        post '/score/username', {:code => 'code', :score => '1.0'}
+        post '/defuse/match_code', {:username => 'username', :time => '1.0'}
       end
     end
 
     context 'with invalid params' do
       it 'respond bad request and error code E.02' do
-        post 'score/username'
+        post 'defuse/match_code'
 
         last_response.should be_bad_request
         Yajl::Parser.parse(last_response.body)['error_code'].should == 'E.02'

@@ -1,5 +1,7 @@
 class Match
   include BombStore::Connection
+  extend BombStore::Connection
+  
   attr_reader :pal
 
   def initialize(player, pal = nil, code = nil)
