@@ -59,7 +59,7 @@ describe DaBomb do
 
       it 'set player time for match' do
         Match.should_receive(:from_code).with('match_code').and_return(@match)
-        @match.should_receive(:defuse).with('username', '1.0')
+        @match.should_receive(:defuse).with(Player.new(:username => 'username'), '1.0')
 
         post '/defuse/match_code', {:username => 'username', :time => '1.0'}
       end

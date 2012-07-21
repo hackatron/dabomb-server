@@ -9,4 +9,7 @@ end
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
   conf.include DaBombSupport
+  conf.before(:all) do
+    BombStore::Redis.redis.flushdb
+  end
 end
