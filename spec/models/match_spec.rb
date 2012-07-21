@@ -61,4 +61,17 @@ describe Match do
       its(:winner) { should == @pal }
     end
   end
+
+  describe 'Cancel a match' do
+    before(:all) do
+      Match.new(@pal)
+      @match = Match.new(@player, @pal)
+    end
+
+    it 'should destroy the match' do
+      @match.should_receive :destroy
+      @player.should_receive :notify_cancel
+      @match.cancel
+    end
+  end
 end
