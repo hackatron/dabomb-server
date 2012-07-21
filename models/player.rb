@@ -34,13 +34,13 @@ class Player < Hashie::Dash
       current_match.cancel
     end
 
-    redis.lrem(Match.waiting_key, username, 1)
+    redis.lrem(Match.waiting_key, 1, username)
   end
 
   def pair
     match = Match.new(self)
     if match.pal
-      pal.wake_up(match.code)
+      match.pal.wake_up(match.code)
       match.code
     else
       nil
