@@ -1,7 +1,7 @@
 Encoding.default_external = Encoding::UTF_8
 
 class DaBomb < Sinatra::Base
-  VERSION = '0.0.5'
+  VERSION = '0.0.6'
 
   before do
     content_type 'application/json'
@@ -42,5 +42,12 @@ class DaBomb < Sinatra::Base
     match.defuse(Player.new(:username => username), time)
 
     status 204
+  end
+
+  get '/leaderboard' do
+    leaders = Leaderboard.top
+    
+    status 200
+    Yajl::Encoder.encode(leaders)
   end
 end

@@ -24,6 +24,7 @@ class Player < Hashie::Dash
   def register
     if unique?
       redis.hset(key, 'username', username)
+      Leaderboard.award_player(self, 0)
     else
       raise 'E.01'
     end
