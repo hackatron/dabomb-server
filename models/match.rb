@@ -14,8 +14,12 @@ class Match
 
   def self.from_code(code)
     players = redis.get("pairs:#{code}")
-    players = players.split(":").collect {|p| Player.new({:username => p})}
-    Match.new(*players)
+    begin
+      players = players.split(":").collect {|p| Player.new({:username => p})}
+      Match.new(*players)
+    rescue
+      nil
+    end
   end
 
   def pair
