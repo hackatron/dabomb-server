@@ -1,3 +1,5 @@
+Encoding.default_external = Encoding::UTF_8
+
 class DaBomb < Sinatra::Base
   VERSION = '0.0.4'
 

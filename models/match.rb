@@ -27,14 +27,13 @@ class Match
       return
     end
 
-    r.set(code, "#{@player.username}:#{@pal.username}")
+    r.set("pairs:#{code}", "#{@player.username}:#{@pal.username}")
     r.set("#{@pal.username}:match", code)
   end
 
   def code
-    sha256 = Digest::SHA256.new
     players = "#{@player.username}:#{@pal.username}"
-    sha256.digest(players)
+    Digest::SHA1.hexdigest(players)
   end
 
   def wait

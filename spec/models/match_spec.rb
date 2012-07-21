@@ -36,7 +36,7 @@ describe Match do
   describe 'Defuse dabomb' do
     before(:all) do
       Match.new(@pal)
-      @match = Match.new(@player, @pal)
+      @match = Match.new(@player)
     end
 
     context 'when player defuse dabomb' do
@@ -65,7 +65,7 @@ describe Match do
   describe 'Cancel a match' do
     before(:all) do
       Match.new(@pal)
-      @match = Match.new(@player, @pal)
+      @match = Match.new(@player)
     end
 
     it 'should destroy the match' do
@@ -73,5 +73,15 @@ describe Match do
       @player.should_receive :notify_cancel
       @match.cancel
     end
+  end
+
+  describe 'Retrive a match from its code' do
+    before(:all) do
+      Match.new(@pal)
+      @match = Match.new(@player)
+    end
+
+    subject { Match.from_code(@match.code) }
+    its(:code) { should == @match.code }
   end
 end
