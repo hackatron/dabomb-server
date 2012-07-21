@@ -37,7 +37,7 @@ class DaBomb < Sinatra::Base
     end
 
     match = Match.from_code(code)
-    match.defuse(username, time)
+    match.defuse(Player.new(:username => username), time)
 
     status 204
   end

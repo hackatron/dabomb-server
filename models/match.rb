@@ -2,12 +2,11 @@ class Match
   include BombStore::Connection
   extend BombStore::Connection
   
-  attr_reader :pal
+  attr_reader :pal, :winner
 
-  def initialize(player, pal = nil, code = nil)
+  def initialize(player, pal = nil)
     @player = player
     @pal = pal
-    @code = code
     if @pal.nil?
       pair
     end
@@ -35,7 +34,7 @@ class Match
   def code
     sha256 = Digest::SHA256.new
     players = "#{@player.username}:#{@pal.username}"
-    @code = sha256.digest(players)
+    sha256.digest(players)
   end
 
   def wait
@@ -59,7 +58,7 @@ class Match
 
     redis.hset(time_key, field_key, time)
 
-    time = redis.hgetall
+    time = redis.hgetall(time_key)
     if time.keys.size == 2
       find_winner(time)
     end
@@ -70,10 +69,14 @@ class Match
     destroy
   end
 
+  def is_player?(who)
+    @player == who
+  end
+
   def find_winner(time)
-    winner = time[@player.username].to_i > time[@pal.username].to_i ? @player : @pal
+    @winner = time[@player.username].to_i > time[@pal.username].to_i ? @pal : @player
     if time[winner.username].to_i == -1
-      winner = nil
+      @winner = nil
     end
 
     [@player, @pal].each {|p| p.close_match(self, winner)}
