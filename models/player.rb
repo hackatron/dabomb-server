@@ -1,5 +1,7 @@
 class Player < Hashie::Dash
   include BombStore::Connection
+  extend BombStore::Connection
+
   property :username, :required => true
 
   def self.next
