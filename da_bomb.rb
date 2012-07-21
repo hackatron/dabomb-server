@@ -1,5 +1,5 @@
 class DaBomb < Sinatra::Base
-  VERSION = '0.0.1'
+  VERSION = '0.0.2'
 
   before do
     content_type 'application/json'
