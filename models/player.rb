@@ -5,8 +5,8 @@ class Player < Hashie::Dash
   property :username, :required => true
 
   def self.next
-    famuos = famous_bombers
-    famous[famous.size] + redis.incr('players_count').to_s
+    famous = famous_bombers
+    famous[rand(famous.size)] + redis.incr('players_count').to_s
   end
 
   def self.famous_bombers
