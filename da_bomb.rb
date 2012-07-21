@@ -18,17 +18,17 @@ class DaBomb < Sinatra::Base
     return Yajl::Encoder.encode({:code => player.pair})
   end
 
-  post '/score/:username' do |username|
-    code = params[:code]
-    score = params[:score]
+  post '/defuse/:code' do |code|
+    username = params[:username]
+    time = params[:time]
 
-    if code.blank? || score.blank?
+    if username.blank? || time.blank?
       status 400
-      return Yajl::Encoder.encode({:error => 'Please, provide the match code and the player score', :error_code => 'E.02'})
+      return Yajl::Encoder.encode({:error => 'Please, provide player username and defuse time', :error_code => 'E.02'})
     end
 
     match = Match.from_code(code)
-    match.score(username, score)
+    match.defuse(username, time)
 
     status 204
   end
