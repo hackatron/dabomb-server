@@ -7,7 +7,7 @@ class DaBomb < Sinatra::Base
     player = Player.new({:username => Player.next})
     player.register
 
-    status 200
+    status 201
     return Yajl::Encoder.encode({:username => player.username})
   end
 
