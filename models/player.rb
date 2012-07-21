@@ -53,6 +53,8 @@ class Player < Hashie::Dash
   end
 
   def defer_retirement
+    puts "defer_retirement: #{username}"
+
     # defer player retirement after 30 seconds of inactivity
     begin
       retire_timer = EM::Timer.new(30) { retire }
@@ -63,6 +65,8 @@ class Player < Hashie::Dash
   end
 
   def cancel_retirement
+    puts "cancel_retirement: #{username}"
+
     if retire_timer = redis.get("retire_timer:#{username}")
       Marshal.load(retire_timer).cancel
       redis.del("retire_timer:#{username}")
@@ -76,6 +80,7 @@ class Player < Hashie::Dash
       match.pal.wake_up(match.code)
       match.code
     else
+      defer_retirement
       nil
     end
   end
@@ -93,10 +98,12 @@ class Player < Hashie::Dash
   end
 
   def close_match(match, winner)
-    channel.trigger('close-match', {:winner => winner})
+    channel.trigger('close-match', {:winner => winner.username})
   end
 
   def notify_cancel
+    puts "notify_cancel: #{username}"
+    
     channel.trigger('match-cancel', {:boom => 'match cancel'})
   end
 end

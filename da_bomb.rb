@@ -29,7 +29,6 @@ class DaBomb < Sinatra::Base
 
   post '/play/:username' do |username|
     player = Player.new({:username => username})
-    player.defer_retirement
 
     status 200
     return Yajl::Encoder.encode({:code => player.pair})
