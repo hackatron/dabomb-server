@@ -43,4 +43,11 @@ class DaBomb < Sinatra::Base
 
     status 204
   end
+
+  get '/leaderboard' do
+    leaders = Leaderboard.top
+    
+    status 200
+    Yajl::Encoder.encode(leaders)
+  end
 end
