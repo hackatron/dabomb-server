@@ -2,6 +2,14 @@ class Player < Hashie::Dash
   include BombStore::Connection
   property :username, :required => true
 
+  def self.next
+    famous_bombers[rand(3)] + redis.incr('players_count').to_s
+  end
+
+  def self.famous_bombers
+    ['Fermi', 'Tom Jones', 'H-Bomb']
+  end
+
   def key
     'players:' + username
   end
