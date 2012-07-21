@@ -1,16 +1,26 @@
 require 'spec_helper'
 
 describe DaBomb do
-  describe '/player' do
+  describe 'POST /players' do
     it 'respond with username' do
-      post '/player'
+      post '/players'
 
       last_response.status.should == 201
       Yajl::Parser.parse(last_response.body).keys.should include('username')
     end
   end
 
-  describe '/play/:username' do
+  describe 'POST /players/:username/retire' do
+    it 'remove respond success and remove player from match' do
+      Player.should_receive(:retire).with('username')
+      
+      post '/players/username/retire'
+
+      last_response.status.should == 204
+    end
+  end
+
+  describe 'POST /play/:username' do
     context 'waiting user' do
       before { Player.any_instance.stub(:paid).and_return(nil) }
 
@@ -34,7 +44,7 @@ describe DaBomb do
     end
   end
 
-  describe '/defuse/:code' do
+  describe 'POST /defuse/:code' do
     context 'with valid params' do
       before { @match = match = Object.new }
 
