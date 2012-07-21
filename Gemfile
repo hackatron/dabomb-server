@@ -13,6 +13,7 @@ gem 'hashie'
 
 group :development do
   gem 'heroku'
+  gem 'foreman'
 end
 
 group :test do
