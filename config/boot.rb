@@ -8,4 +8,8 @@ Bundler.require(:default, ENV['RACK_ENV'].to_sym)
 $:.unshift(File.join(File.dirname(__FILE__), '/../'))
 
 require 'logger'
+
+require 'lib/bomb_store/redis'
+require 'lib/bomb_store/connection'
+
 require 'da_bomb'
