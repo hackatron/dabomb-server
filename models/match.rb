@@ -1,4 +1,5 @@
 class Match
+  include BombStore::Connection
   attr_reader :pal
 
   def initialize(player, pal = nil, code = nil)
@@ -11,13 +12,13 @@ class Match
   end
 
   def self.from_code(code)
-    players = BombStore.redis.get("pairs:#{code}")
+    players = redis.get("pairs:#{code}")
     players = players.split(":").collect {|p| Player.new({:username => p})}
     Match.new(*players)
   end
 
   def pair
-    r = BombStore.redis
+    r = redis
     begin
       @pal = Player.new({:username => r.lpop})
     rescue
@@ -35,7 +36,7 @@ class Match
   end
 
   def wait
-    BombStore.redis.rpush(self.class.waiting_key, @player.username)
+    redis.rpush(self.class.waiting_key, @player.username)
     @pal = nil
   end
 
