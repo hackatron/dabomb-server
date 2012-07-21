@@ -12,6 +12,10 @@ require 'logger'
 require 'lib/bomb_store/redis'
 require 'lib/bomb_store/connection'
 
-require 'da_bomb'
+require 'config/redis'
+require 'config/pusher_config'
 
 Dir["./models/**/*.rb"].each { |f| require f }
+
+require 'lib/core_extensions'
+require 'da_bomb'

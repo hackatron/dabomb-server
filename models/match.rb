@@ -1,5 +1,7 @@
 class Match
   include BombStore::Connection
+  extend BombStore::Connection
+  
   attr_reader :pal
 
   def initialize(player, pal = nil, code = nil)
@@ -27,6 +29,7 @@ class Match
     end
 
     r.set(code, "#{@player.username}:#{@pal.username}")
+    r.set("#{@pal.username}:match", code)
   end
 
   def code
@@ -44,30 +47,45 @@ class Match
     [@player, @pal].each {|p| p.start_match(self)}
   end
 
-  def score_key
-    "#{code}:score"
+  def time_key
+    "#{code}:time"
   end
 
-  def score(who, score)
+  def defuse(who, time)
     field_key = 'pal'
     if is_player?(who)
       field_key = 'player'
     end
 
-    BombStore.hset(score_key, field_key, score)
+    BombStore.hset(time_key, field_key, time)
 
-    score = BombStore.hgetall
-    if score.keys.size == 2
-      find_winner(score)
+    time = BombStore.hgetall
+    if time.keys.size == 2
+      find_winner(time)
     end
   end
 
-  def find_winner(score)
-    winner = score[@player.username] > score[@pal.username] ? @player : @pal
+  def cancel
+    @player.notify_cancel
+    destroy
+  end
+
+  def find_winner(time)
+    winner = time[@player.username].to_i > time[@pal.username].to_i ? @player : @pal
+    if time[winner.username].to_i == -1
+      winner = nil
+    end
+
     [@player, @pal].each {|p| p.close_match(self, winner)}
 
+    # TODO: give points
+
     # the match is over, remove match keys
-    BombStore.del(score_key)
+    destroy
+  end
+
+  def destroy
+    BombStore.del(time_key)
     BombStore.del(code)
   end
 

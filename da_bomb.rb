@@ -1,10 +1,44 @@
 class DaBomb < Sinatra::Base
-  post '/player' do
-    if params[:username].blank?
+  VERSION = '0.0.1'
+
+  before do
+    content_type 'application/json'
+  end
+
+  post '/players' do
+    player = Player.new(:username => Player.next)
+    player.register
+
+    status 201
+    return Yajl::Encoder.encode({:username => player.username})
+  end
+
+  post '/players/:username/retire' do |username|
+    player = Player.new(:username => username)
+    player.retire
+
+    status 204
+  end
+
+  post '/play/:username' do |username|
+    player = Player.new({:username => username})
+
+    status 200
+    return Yajl::Encoder.encode({:code => player.pair})
+  end
+
+  post '/defuse/:code' do |code|
+    username = params[:username]
+    time = params[:time]
+
+    if username.blank? || time.blank?
       status 400
-      return Yajl::Encoder.encode({:error => "Please, provide a username"})
+      return Yajl::Encoder.encode({:error => 'Please, provide player username and defuse time', :error_code => 'E.02'})
     end
 
-    player = Player.new({:username => params[:username]})
+    match = Match.from_code(code)
+    match.defuse(username, time)
+
+    status 204
   end
 end
