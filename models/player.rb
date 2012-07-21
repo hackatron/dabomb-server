@@ -6,7 +6,7 @@ class Player < Hashie::Dash
 
   def self.next
     famous = famous_bombers
-    famous[rand(famous.size)] + redis.incr('players_count').to_s
+    famous[rand(famous.size)].tr(' ', '_') + redis.incr('players_count').to_s
   end
 
   def self.famous_bombers
