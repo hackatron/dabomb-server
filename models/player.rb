@@ -1,4 +1,5 @@
 class Player < Hashie::Dash
+  include BombStore::Connection
   property :username, :required => true
 
   def key
@@ -6,12 +7,12 @@ class Player < Hashie::Dash
   end
 
   def unique?
-    BombStore.redis.sadd('players', username)
+    redis.sadd('players', username)
   end
 
   def register
     if unique?
-      BombStore.redis.hset(key, 'username', username)
+      redis.hset(key, 'username', username)
     else
       raise 'E.01'
     end
