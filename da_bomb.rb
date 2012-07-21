@@ -1,3 +1,5 @@
+Encoding.default_external = Encoding::UTF_8
+
 class DaBomb < Sinatra::Base
   VERSION = '0.0.4'
 
@@ -37,7 +39,7 @@ class DaBomb < Sinatra::Base
     end
 
     match = Match.from_code(code)
-    match.defuse(username, time)
+    match.defuse(Player.new(:username => username), time)
 
     status 204
   end
