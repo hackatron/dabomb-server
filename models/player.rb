@@ -3,11 +3,12 @@ class Player < Hashie::Dash
   property :username, :required => true
 
   def self.next
-    famous_bombers[rand(3)] + redis.incr('players_count').to_s
+    famuos = famous_bombers
+    famous[famous.size] + redis.incr('players_count').to_s
   end
 
   def self.famous_bombers
-    ['Fermi', 'Tom Jones', 'H-Bomb']
+    ['Fermi', 'Tom Jones', 'H-Bomb', 'Martin Riggs', 'Roger Murtaugh']
   end
 
   def key
