@@ -17,5 +17,5 @@ require 'config/pusher_config'
 
 Dir["./models/**/*.rb"].each { |f| require f }
 
-require 'config/core_extensions'
+require 'lib/core_extensions'
 require 'da_bomb'
