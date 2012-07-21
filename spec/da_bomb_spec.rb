@@ -74,4 +74,15 @@ describe DaBomb do
       end
     end
   end
+
+  describe 'GET /leaderboard' do
+    before { Player.new(:username => 'username').register }
+
+    it 'respond success and leaderboard' do
+      get '/leaderboard'
+
+      last_response.should be_ok
+      Yajl::Parser.parse(last_response.body).should include({'username' => 'username', 'score' => 0, 'rank' => 1})
+    end
+  end
 end
