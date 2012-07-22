@@ -1,7 +1,7 @@
 Encoding.default_external = Encoding::UTF_8
 
 class DaBomb < Sinatra::Base
-  VERSION = '0.0.8'
+  VERSION = '0.0.9'
 
   before do
     content_type 'application/json'
@@ -36,7 +36,7 @@ class DaBomb < Sinatra::Base
 
   post '/defuse/:code' do |code|
     username = params[:username]
-    time = params[:time]
+    time     = params[:time]
 
     if username.blank? || time.blank?
       status 400

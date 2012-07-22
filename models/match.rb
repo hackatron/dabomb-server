@@ -54,12 +54,7 @@ class Match
   end
 
   def defuse(who, time)
-    field_key = 'pal'
-    if is_player?(who)
-      field_key = 'player'
-    end
-
-    redis.hset(time_key, field_key, time)
+    redis.hset(time_key, who.username, time)
 
     time = redis.hgetall(time_key)
     if time.keys.size == 2
@@ -72,12 +67,8 @@ class Match
     destroy
   end
 
-  def is_player?(who)
-    @player == who
-  end
-
   def find_winner(time)
-    @winner = time[@player.username].to_i > time[@pal.username].to_i ? @pal : @player
+    @winner = time[@player.username].to_f > time[@pal.username].to_f ? @pal : @player
     if time[@winner.username].to_i == -1
       @winner = nil
     end
