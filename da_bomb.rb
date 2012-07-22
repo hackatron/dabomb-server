@@ -1,7 +1,7 @@
 Encoding.default_external = Encoding::UTF_8
 
 class DaBomb < Sinatra::Base
-  VERSION = '0.0.9'
+  VERSION = '0.1.0'
 
   before do
     content_type 'application/json'
