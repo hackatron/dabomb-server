@@ -68,16 +68,16 @@ class Match
   end
 
   def find_winner(time)
-    @winner = time[@player.username].to_f > time[@pal.username].to_f ? @pal : @player
+    @winner = time[@player.username].to_f > time[@pal.username].to_f ? @pal    : @player
+    @loser  = time[@player.username].to_f > time[@pal.username].to_f ? @player : @pal
+    
     if time[@winner.username].to_i == -1
-      @winner = nil
+      @winner = time[@loser.username].to_i == -1 ? nil : @loser
     end
 
-    [@player, @pal].each {|p| p.close_match(self, @winner)}
+    [@player, @pal].each { |p| p.close_match(self, @winner) }
 
-    if @winner
-      Leaderboard.award_player(@winner, 1)
-    end
+    Leaderboard.award_player(@winner, 1) if @winner
 
     # the match is over, remove match keys
     destroy
