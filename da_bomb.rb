@@ -36,7 +36,7 @@ class DaBomb < Sinatra::Base
 
   post '/defuse/:code' do |code|
     username = params[:username]
-    time = params[:time]
+    time     = params[:time]
 
     if username.blank? || time.blank?
       status 400
